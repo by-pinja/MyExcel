@@ -1,6 +1,9 @@
-$JExcel = {
-};
+if (typeof module !== "undefined") {
+    var JSZip = require('./jszip');
+    var saveAs = require('./FileSaver');
+}
 
+var $JExcel = {};
 
 // Pending runText formatting http://officeopenxml.com/SSstyles.php
 (function () {
@@ -25,7 +28,7 @@ $JExcel = {
 	$JExcel.toExcelUTCTime = function (date1){
 		var d2=Math.floor(date1.getTime()/1000);													// Number of seconds since JS epoch
 		d2=Math.floor(d2/86400)+25569;																// Days since epoch plus difference in days between Excel EPOCH and JS epoch
-		
+
 		var seconds = date1.getUTCSeconds()+60*date1.getUTCMinutes()+60*60*date1.getUTCHours();		// Number of seconds of received hour
 		var SECS_DAY= 60 * 60 * 24;																	// Number of seconds of a day
 		return d2+(seconds/SECS_DAY);																// Returns a local time !!
@@ -134,7 +137,7 @@ $JExcel = {
     }
 
     function pushI(list, value) {
-        list.push(value); 
+        list.push(value);
         return list.length - 1;
     }
 
@@ -147,7 +150,7 @@ $JExcel = {
 
 
 
-    // --------------------- BEGIN Handling of sheets 
+    // --------------------- BEGIN Handling of sheets
     function toWorkBookSheet(sheet) {
         return '<sheet state="visible" name="' + sheet.name + '" sheetId="' + sheet.id + '" r:id="' + sheet.rId + '"/>';
     }
@@ -269,7 +272,7 @@ $JExcel = {
         };
         return oSheets;
     }
-    // --------------------- END Handling of sheets 
+    // --------------------- END Handling of sheets
 
     // --------------------- BEGIN Handling of style
 
@@ -344,7 +347,7 @@ $JExcel = {
         if ((style.fill || 0) != 0) s = s + ' applyFill="1" ';
         if ((alignXml || "") != "") s = s + ' applyAlignment="1" ';
         s = s + '>';
-        s = s + alignXml; 
+        s = s + alignXml;
         return s + "</xf>";
     }
 
@@ -352,7 +355,7 @@ $JExcel = {
 
     function normalizeFont(fontDescription) {
         fontDescription = replaceAllMultiple(fontDescription, "  ", " ");
-        var fNormalized = ["_", "_", "_", "_"];                                 //  Name - Size - Color - Style (use NONE as placeholder) 
+        var fNormalized = ["_", "_", "_", "_"];                                 //  Name - Size - Color - Style (use NONE as placeholder)
         var i = 0, list = fontDescription.split(" ");                       //  Split by " "
         var name = [];
         while (list[0] && (list[0] != "none") && (isNaN(list[0])) && (list[0].charAt(0) != "#")) {
@@ -362,7 +365,7 @@ $JExcel = {
 
         fNormalized[0] = name.join(" ");
         while (list[0] == "none") list.splice(0, 1);                        // Delete any "none" that we might have
-        if (!isNaN(list[0])) {                                              // IF we have a number then this is the font size    
+        if (!isNaN(list[0])) {                                              // IF we have a number then this is the font size
             fNormalized[1] = list[0];
             list.splice(0, 1);
         }
@@ -411,12 +414,12 @@ $JExcel = {
                 if (a.font) style.font = findOrAdd(fonts, normalizeFont(a.font.toString().trim()));
                 if (a.format) style.format = findOrAdd(formats, a.format);
                 if (a.align) style.align = normalizeAlign(a.align);
-                if (a.border) style.border = 1 + findOrAdd(borders, normalizeBorders(a.border.toString().trim()));                                          // There is a HARDCODED border         
+                if (a.border) style.border = 1 + findOrAdd(borders, normalizeBorders(a.border.toString().trim()));                                          // There is a HARDCODED border
 
-                createKey(style);   
+                createKey(style);
                 for (var i = styles.length - 1; i >= 0; i--) {
                     if (styles[i].key == style.key) return 1 + i;
-                }  
+                }
                 return 1 + pushI(styles, style);                                                            // Add the style and return INDEX+1 because of the DEFAULT HARDCODED style
             }
         };
@@ -430,7 +433,7 @@ $JExcel = {
 
             for (var i = styles.length - 1; i >= 0; i--) {
                  if (styles[i].key == thisOne.key) return i;
-            } 
+            }
             return pushI(styles, thisOne);
         }
 
@@ -505,11 +508,11 @@ $JExcel = {
           ? string.replace(reUnescapedHtml, escapeHtmlChar)
           : string;
     }
-	
+
 	function cellNameH(i) {
-		var rest = Math.floor(i / 26) - 1; 
+		var rest = Math.floor(i / 26) - 1;
 		var s = (rest > -1 ? cellNameH(rest) : '');
-		return  s+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(i % 26); 
+		return  s+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(i % 26);
 	}
 
     function cellName(colIndex, rowIndex) {
@@ -520,11 +523,11 @@ $JExcel = {
       if (cell.colspan > 1) {
           var m = { from: cellName(column, row), to: cellName(column + cell.colspan - 1, row) };
           mergeCells.push(m);
-      }        
+      }
       var s = '<c r="' + cellName(column, row) + '"';
       if (cell.s) s = s + ' s="' + cell.s + '" ';
-        
-        
+
+
 		  var value=cell.v;
 		  if (cell.isstring || isNaN(value)) {
   			if (cell.isstring || value.charAt(0)!='=') return s + ' t="inlineStr" ><is><t>' + escape(value) + '</t></is></c>';
@@ -605,7 +608,7 @@ $JExcel = {
                 s += '</sheetView>';
             }
         }
-        s += "</sheetViews>"; 
+        s += "</sheetViews>";
         return s;
     }
 
@@ -614,7 +617,7 @@ $JExcel = {
     }
 
 
-    //  Loops all rows & columns in sheets. 
+    //  Loops all rows & columns in sheets.
     //  If a row has a style it tries to apply the style componenets to all cells in the row (provided that the cell has not defined is not own style component)
 
     function CombineStyles(sheets, styles) {
@@ -702,19 +705,25 @@ $JExcel = {
             sheets.get(s).freezePane(x, y);
         }
 
-        excel.generate = function (filename) {
+        excel.generate = function (filename, callback = () => {}) {
             CombineStyles(sheets.sheets, styles);
             var zip = new JSZip();                                                                              // Create a ZIP file
-            zip.file('_rels/.rels', sheets.toRels());                                                           // Add WorkBook RELS   
+            zip.file('_rels/.rels', sheets.toRels());                                                           // Add WorkBook RELS
             var xl = zip.folder('xl');                                                                          // Add a XL folder for sheets
             xl.file('workbook.xml', sheets.toWorkBook());                                                       // And a WorkBook
             xl.file('styles.xml', styles.toStyleSheet());                                                       // Add styles
             xl.file('_rels/workbook.xml.rels', sheets.toWorkBookRels());                                        // Add WorkBook RELs
             zip.file('[Content_Types].xml', sheets.toContentType());                                            // Add content types
-            sheets.fileData(xl);                                                                                // Zip the rest    
-            zip.generateAsync({ type: "blob",mimeType:"application/vnd.ms-excel" }).then(function (content) { saveAs(content, filename); });        // And generate !!!
-       
+            sheets.fileData(xl);                                                                                // Zip the rest
+            // And generate !!!
+            zip.generateAsync({ type: "blob", mimeType:"application/vnd.ms-excel" })
+            .then(function (content) { saveAs(content, filename); })
+            .then(callback);
 	}
         return excel;
     }
 })();
+
+if (typeof module !== "undefined") {
+    module.exports = $JExcel;
+}

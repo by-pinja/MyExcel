@@ -1,0 +1,23 @@
+{
+  "name": "myexcel",
+  "version": "1.0.0",
+  "description": "Fastest js excel exporter that supports exporting 37K rows with 38 columns per row",
+  "main": "myexcel.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/healthcarelogic/MyExcel.git"
+  },
+  "keywords": [
+    "excel",
+    "export"
+  ],
+  "author": "jsegarra1971",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/healthcarelogic/MyExcel/issues"
+  },
+  "homepage": "https://github.com/healthcarelogic/MyExcel#readme"
+}

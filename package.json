@@ -1,6 +1,6 @@
 {
   "name": "myexcel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fastest js excel exporter that supports exporting 37K rows with 38 columns per row",
   "main": "myexcel.js",
   "scripts": {

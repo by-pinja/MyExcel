@@ -25,23 +25,23 @@ var $JExcel = {};
         return (componentToHex(r) + componentToHex(g) + componentToHex(b)).toUpperCase();
     }
 
-	$JExcel.toExcelUTCTime = function (date1){
-		var d2=Math.floor(date1.getTime()/1000);													// Number of seconds since JS epoch
-		d2=Math.floor(d2/86400)+25569;																// Days since epoch plus difference in days between Excel EPOCH and JS epoch
+    $JExcel.toExcelUTCTime = function (date1) {
+        var d2 = Math.floor(date1.getTime() / 1000);													// Number of seconds since JS epoch
+        d2 = Math.floor(d2 / 86400) + 25569;																// Days since epoch plus difference in days between Excel EPOCH and JS epoch
 
-		var seconds = date1.getUTCSeconds()+60*date1.getUTCMinutes()+60*60*date1.getUTCHours();		// Number of seconds of received hour
-		var SECS_DAY= 60 * 60 * 24;																	// Number of seconds of a day
-		return d2+(seconds/SECS_DAY);																// Returns a local time !!
-	}
+        var seconds = date1.getUTCSeconds() + 60 * date1.getUTCMinutes() + 60 * 60 * date1.getUTCHours();		// Number of seconds of received hour
+        var SECS_DAY = 60 * 60 * 24;																	// Number of seconds of a day
+        return d2 + (seconds / SECS_DAY);																// Returns a local time !!
+    }
 
-	$JExcel.toExcelLocalTime = function (date1){
-		var d2=Math.floor(date1.getTime()/1000);													// Number of seconds since JS epoch
-		d2=Math.floor(d2/86400)+25569;																// Days since epoch plus difference in days between Excel EPOCH and JS epoch
-		var seconds = date1.getUTCSeconds()+60*date1.getUTCMinutes()+60*60*date1.getUTCHours();		// Number of seconds of received hour
-		seconds = seconds-60*(date1.getTimezoneOffset());											// Differences in seconds between UTC and LOCAL this depends on date becase daylight saving time
-		var SECS_DAY= 60 * 60 * 24;																	// Number of seconds of a day
-		return d2+(seconds/SECS_DAY);																// Returns a local time !!
-	}
+    $JExcel.toExcelLocalTime = function (date1) {
+        var d2 = Math.floor(date1.getTime() / 1000);													// Number of seconds since JS epoch
+        d2 = Math.floor(d2 / 86400) + 25569;																// Days since epoch plus difference in days between Excel EPOCH and JS epoch
+        var seconds = date1.getUTCSeconds() + 60 * date1.getUTCMinutes() + 60 * 60 * date1.getUTCHours();		// Number of seconds of received hour
+        seconds = seconds - 60 * (date1.getTimezoneOffset());											// Differences in seconds between UTC and LOCAL this depends on date becase daylight saving time
+        var SECS_DAY = 60 * 60 * 24;																	// Number of seconds of a day
+        return d2 + (seconds / SECS_DAY);																// Returns a local time !!
+    }
 
     // For styles see page 2127-2143 of the standard at
     // http://www.ecma-international.org/news/TC45_current_work/Office%20Open%20XML%20Part%204%20-%20Markup%20Language%20Reference.pdf
@@ -162,9 +162,9 @@ var $JExcel = {};
 
     function getAsXml(sheet) {
         return templateSheet.replace('{views}', generateViews(sheet.views))
-                            .replace('{columns}', generateColums(sheet.columns))
-                            .replace("{rows}", generateRows(sheet.rows, sheet.mergeCells))
-                            .replace("{mergeCells}", generateMergeCells(sheet.mergeCells));
+            .replace('{columns}', generateColums(sheet.columns))
+            .replace("{rows}", generateRows(sheet.rows, sheet.mergeCells))
+            .replace("{mergeCells}", generateMergeCells(sheet.mergeCells));
     }
 
 
@@ -332,12 +332,12 @@ var $JExcel = {};
         if (style.align) {
             var h = align[style.align.charAt(0)];
             var v = align[style.align.charAt(1)];
-	        var w = align[style.align.charAt(2)];
+            var w = align[style.align.charAt(2)];
             if (h || v || w) {
                 alignXml = "<alignment ";
                 if (h) alignXml = alignXml + ' horizontal="' + h + '" ';
                 if (v) alignXml = alignXml + ' vertical="' + v + '" ';
-				if (w) alignXml = alignXml + ' ' + w + '="1" ';
+                if (w) alignXml = alignXml + ' ' + w + '="1" ';
                 alignXml = alignXml + " />";
             }
         }
@@ -409,7 +409,7 @@ var $JExcel = {};
 
         var oStyles = {
             add: function (a) {
-                var style = {isstring: a.isstring};
+                var style = { isstring: a.isstring };
                 if (a.fill && a.fill.charAt(0) == "#") style.fill = 2 + findOrAdd(fills, a.fill.toString().substring(1).toUpperCase());                  // If there is a fill color add it, with a gap of 2, because of the TWO DEFAULT HARDCODED fills
                 if (a.font) style.font = findOrAdd(fonts, normalizeFont(a.font.toString().trim()));
                 if (a.format) style.format = findOrAdd(formats, a.format);
@@ -424,7 +424,7 @@ var $JExcel = {};
             }
         };
 
-        if (!defaultFont) defaultFont="Calibri Light 12 0000EE";
+        if (!defaultFont) defaultFont = "Calibri Light 12 0000EE";
         oStyles.add({ font: defaultFont });
 
 
@@ -432,7 +432,7 @@ var $JExcel = {};
             createKey(thisOne);
 
             for (var i = styles.length - 1; i >= 0; i--) {
-                 if (styles[i].key == thisOne.key) return i;
+                if (styles[i].key == thisOne.key) return i;
             }
             return pushI(styles, thisOne);
         }
@@ -442,7 +442,7 @@ var $JExcel = {};
         }
         oStyles.toStyleSheet = function () {
             var s = '<?xml version="1.0" encoding="utf-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
-                    'xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">';
+                'xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">';
 
             s = s + '<numFmts count="' + (formats.length - baseFormats) + '">';
             for (var i = baseFormats; i < formats.length; i++) s = s + '<numFmt numFmtId="' + (i) + '" formatCode="' + formats[i] + '"/>';
@@ -505,35 +505,35 @@ var $JExcel = {};
         if (typeof string != 'string') string = null ? '' : (string + '');
 
         return (string && reHasUnescapedHtml.test(string))
-          ? string.replace(reUnescapedHtml, escapeHtmlChar)
-          : string;
+            ? string.replace(reUnescapedHtml, escapeHtmlChar)
+            : string;
     }
 
-	function cellNameH(i) {
-		var rest = Math.floor(i / 26) - 1;
-		var s = (rest > -1 ? cellNameH(rest) : '');
-		return  s+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(i % 26);
-	}
+    function cellNameH(i) {
+        var rest = Math.floor(i / 26) - 1;
+        var s = (rest > -1 ? cellNameH(rest) : '');
+        return s + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(i % 26);
+    }
 
     function cellName(colIndex, rowIndex) {
-        return cellNameH(colIndex)+rowIndex;
+        return cellNameH(colIndex) + rowIndex;
     };
 
     function generateCell(cell, column, row, mergeCells) {
-      if (cell.colspan > 1) {
-          var m = { from: cellName(column, row), to: cellName(column + cell.colspan - 1, row) };
-          mergeCells.push(m);
-      }
-      var s = '<c r="' + cellName(column, row) + '"';
-      if (cell.s) s = s + ' s="' + cell.s + '" ';
+        if (cell.colspan > 1) {
+            var m = { from: cellName(column, row), to: cellName(column + cell.colspan - 1, row) };
+            mergeCells.push(m);
+        }
+        var s = '<c r="' + cellName(column, row) + '"';
+        if (cell.s) s = s + ' s="' + cell.s + '" ';
 
 
-		  var value=cell.v;
-		  if (cell.isstring || isNaN(value)) {
-  			if (cell.isstring || value.charAt(0)!='=') return s + ' t="inlineStr" ><is><t>' + escape(value) + '</t></is></c>';
-			  return s+' ><f>'+value.substring(1)+'</f></c>';
-      }
-		  return s + '><v>' + value + '</v></c>';
+        var value = cell.v;
+        if (cell.isstring || isNaN(value)) {
+            if (cell.isstring || value.charAt(0) != '=') return s + ' t="inlineStr" ><is><t>' + escape(value) + '</t></is></c>';
+            return s + ' ><f>' + value.substring(1) + '</f></c>';
+        }
+        return s + '><v>' + value + '</v></c>';
     }
 
     function generateRow(row, index, mergeCells) {
@@ -693,7 +693,7 @@ var $JExcel = {};
             if (isNaN(column) && isNaN(row)) return s.set(value, style);                                                         // If this is a sheet operation
             if (!isNaN(column)) {                                                                                                // If this is a column operation
                 if (!isNaN(row)) {
-                    var isstring = style && styles.getStyle(style-1).isstring;
+                    var isstring = style && styles.getStyle(style - 1).isstring;
                     return setCell(s.getCell(column, row), value, style, isstring, colspan);                                              // and also a ROW operation the this is a CELL operation
                 }
                 return setColumn(s.getColumn(column), value, style);                                                             // if not we confirm than this is a COLUMN operation
@@ -705,7 +705,9 @@ var $JExcel = {};
             sheets.get(s).freezePane(x, y);
         }
 
-        excel.generate = function (filename, callback = () => {}) {
+        excel.generate = function (filename, callback) {
+            var callbackFunc = callback ? callback : function () { };
+
             CombineStyles(sheets.sheets, styles);
             var zip = new JSZip();                                                                              // Create a ZIP file
             zip.file('_rels/.rels', sheets.toRels());                                                           // Add WorkBook RELS
@@ -716,10 +718,10 @@ var $JExcel = {};
             zip.file('[Content_Types].xml', sheets.toContentType());                                            // Add content types
             sheets.fileData(xl);                                                                                // Zip the rest
             // And generate !!!
-            zip.generateAsync({ type: "blob", mimeType:"application/vnd.ms-excel" })
-            .then(function (content) { saveAs(content, filename); })
-            .then(callback);
-	}
+            zip.generateAsync({ type: "blob", mimeType: "application/vnd.ms-excel" })
+                .then(function (content) { saveAs(content, filename); })
+                .then(callbackFunc);
+        }
         return excel;
     }
 })();

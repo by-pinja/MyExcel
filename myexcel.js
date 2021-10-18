@@ -718,7 +718,7 @@ var $JExcel = {};
             zip.file('[Content_Types].xml', sheets.toContentType());                                            // Add content types
             sheets.fileData(xl);                                                                                // Zip the rest
             // And generate !!!
-            zip.generateAsync({ type: "blob", mimeType: "application/vnd.ms-excel" })
+            zip.generateAsync({ type: "blob", mimeType: "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
                 .then(function (content) { saveAs(content, filename); })
                 .then(callbackFunc);
         }

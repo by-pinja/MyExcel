@@ -1,5 +1,7 @@
 # MyExcel
 
+> NOTE: This repository has been forked from the original to include [this yet-to-be merged bug fix](https://github.com/healthcarelogic/MyExcel/pull/1). Once the bug has been fixed in the original repository, this one may be closed. Currently depended on by [sähkönumerot.fi](https://github.com/by-pinja/sahkonumerot-fi).
+
 ## npm
 
 * Install
